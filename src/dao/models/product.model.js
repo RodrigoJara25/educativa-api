@@ -1,39 +1,34 @@
 import mongoose from "mongoose";
 
-const collection = 'products';  
+const collection = 'products';
 
 const productSchema = new mongoose.Schema({
-    tipo: {
-        type: String,
-        required: true,
-        enum: ['LIBRO', 'LAMINA']
-    },
     categoria: {
-        type: String,
-        required: true,
-        enum: ['Laminas Grandes', 'Laminas Souvenir', 'Diccionarios', 'Cuentos Clasicos', 'Obras Literarias', 'Cuentos Selectos', 'Cuentos Ecologicos', 'Cuentos Plan Lector', 'Cuentos Infantiles']
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'categories',
+        required: true
     },
     subcategoria: {
-        type: String,
-        required: function() { return this.tipo === 'LAMINA'; }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'subcategories',
+        default: null
     },
     titulo: {
         type: String,
-        required: function() { return this.tipo === 'LIBRO'; },
-        trim: true
+        trim: true,
+        default: null
     },
     fotoPortada: {
         type: String,
-        required: function() { return this.tipo === 'LIBRO'; }
+        default: null
     },
     fotoLamina: {
         type: String,
-        required: function() { return this.tipo === 'LAMINA'; }
+        default: null
     },
-    fotosInterior: {    // array de fotos
+    fotosInterior: {
         type: [String],
-        default: [],
-        required: function() { return this.tipo === 'LIBRO'; }
+        default: []
     }
 }, { timestamps: true });
 
