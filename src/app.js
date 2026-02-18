@@ -5,6 +5,7 @@ import cors from 'cors';
 import { connectDB } from './config/db.js';
 
 import productRouter from './routes/product.routes.js';
+import categoryRouter from './routes/category.routes.js';
 
 // dotenv.config();
 
@@ -13,10 +14,11 @@ const PORT = process.env.PORT || 8080;
 
 // Middlewares
 app.use(cors());    // para que el front no tenga problemas de CORS
-app.use(express.json());    
+app.use(express.json());
 
 // Rutas 
 app.use('/api/products', productRouter);
+app.use('/api/categories', categoryRouter);
 // Manejar ruta no encontrada
 app.use((req, res, next) => {
     res.status(404).json({ status: 'error', message: 'Ruta no encontrada' });
