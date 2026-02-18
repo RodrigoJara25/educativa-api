@@ -8,19 +8,10 @@ const subcategorySchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    descripcion: {
-        type: String,
-        trim: true,
-        default: ''
-    },
     categoria: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'categories',
         required: true
-    },
-    activo: {
-        type: Boolean,
-        default: true
     },
     orden: {
         type: Number,
