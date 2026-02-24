@@ -19,6 +19,10 @@ const categorySchema = new mongoose.Schema({
         required: true,
         enum: ['LIBRO', 'LAMINA']
     },
+    foto: {
+        type: String,
+        default: null
+    },
     activo: {
         type: Boolean,
         default: true

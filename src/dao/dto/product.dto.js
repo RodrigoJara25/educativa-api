@@ -1,6 +1,7 @@
 export default class ProductDTO {
     constructor(product) {
         this.id = product._id;
+        this.item = product.item;
         this.categoria = product.categoria;  // Objeto populado: { _id, nombre, tipo }
 
         // Determinamos el tipo desde la categoría populada

@@ -34,7 +34,10 @@ export default class ProductService {
             const category = await this.categoryRepository.getCategoryById(data.categoria);
             if (!category) throw new Error('La categoría no existe');
 
-            // 2. Validar campos según el tipo de la categoría
+            // 2. Validar item
+            if (!data.item) throw new Error('item es requerido');
+
+            // 3. Validar campos según el tipo de la categoría
             if (category.tipo === 'LAMINA') {
                 if (!data.subcategoria) throw new Error('subcategoria es requerida para láminas');
                 if (!data.fotoLamina) throw new Error('fotoLamina es requerida para láminas');

@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 const collection = 'products';
 
 const productSchema = new mongoose.Schema({
+    item: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     categoria: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'categories',

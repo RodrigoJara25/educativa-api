@@ -27,7 +27,14 @@ export default class CategoryController {
 
     createCategory = async (req, res) => {
         try {
-            const newCategory = await this.service.createCategory(req.body);
+            const categoryData = req.body;
+
+            // Si viene un archivo subido, asignarlo al campo foto
+            if (req.file) {
+                categoryData.foto = req.file.path;
+            }
+
+            const newCategory = await this.service.createCategory(categoryData);
             res.status(201).json(newCategory);
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -37,7 +44,14 @@ export default class CategoryController {
     updateCategory = async (req, res) => {
         try {
             const { id } = req.params;
-            const updatedCategory = await this.service.updateCategory(id, req.body);
+            const categoryData = req.body;
+
+            // Si viene un archivo subido, actualizar el campo foto
+            if (req.file) {
+                categoryData.foto = req.file.path;
+            }
+
+            const updatedCategory = await this.service.updateCategory(id, categoryData);
             res.status(200).json(updatedCategory);
         } catch (error) {
             res.status(400).json({ error: error.message });
