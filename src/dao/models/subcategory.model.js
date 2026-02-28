@@ -13,6 +13,10 @@ const subcategorySchema = new mongoose.Schema({
         ref: 'categories',
         required: true
     },
+    foto: {
+        type: String,
+        default: null
+    },
     orden: {
         type: Number,
         default: 0

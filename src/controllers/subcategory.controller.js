@@ -27,7 +27,11 @@ export default class SubcategoryController {
 
     createSubcategory = async (req, res) => {
         try {
-            const newSubcategory = await this.service.createSubcategory(req.body);
+            const subcategoryData = req.body;
+            if (req.file) {
+                subcategoryData.foto = req.file.path;
+            }
+            const newSubcategory = await this.service.createSubcategory(subcategoryData);
             res.status(201).json(newSubcategory);
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -37,7 +41,11 @@ export default class SubcategoryController {
     updateSubcategory = async (req, res) => {
         try {
             const { id } = req.params;
-            const updatedSubcategory = await this.service.updateSubcategory(id, req.body);
+            const subcategoryData = req.body;
+            if (req.file) {
+                subcategoryData.foto = req.file.path;
+            }
+            const updatedSubcategory = await this.service.updateSubcategory(id, subcategoryData);
             res.status(200).json(updatedSubcategory);
         } catch (error) {
             res.status(400).json({ error: error.message });

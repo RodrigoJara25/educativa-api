@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import SubcategoryController from '../controllers/subcategory.controller.js';
+import { uploader } from '../utils/uploader.js';
 
 const router = Router();
 const controller = new SubcategoryController();
@@ -12,8 +13,8 @@ const controller = new SubcategoryController();
 
 router.get('/', controller.getSubcategories);
 router.get('/:id', controller.getSubcategoryById);
-router.post('/', controller.createSubcategory);
-router.put('/:id', controller.updateSubcategory);
+router.post('/', uploader.single('image'), controller.createSubcategory);
+router.put('/:id', uploader.single('image'), controller.updateSubcategory);
 router.delete('/:id', controller.deleteSubcategory);
 
 export default router;
