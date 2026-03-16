@@ -5,6 +5,7 @@ export default class CategoryDTO {
         this.descripcion = category.descripcion;
         this.tipo = category.tipo;
         this.foto = category.foto;
+        this.caracteristicas = category.caracteristicas || [];
         this.activo = category.activo;
         this.orden = category.orden;
         this.createdAt = category.createdAt;
