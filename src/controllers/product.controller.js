@@ -45,7 +45,16 @@ export default class ProductController {
     updateProduct = async (req, res) => {
         try {
             const { id } = req.params;
-            const updatedProduct = await this.service.updateProduct(id, req.body);
+            const productData = req.body;
+
+            // Al igual que en createProduct, si viene un archivo, actualizamos las fotos.
+            // El service limpiará el que no corresponda.
+            if (req.file) {
+                productData.fotoPortada = req.file.path;
+                productData.fotoLamina = req.file.path;
+            }
+
+            const updatedProduct = await this.service.updateProduct(id, productData);
             res.status(200).json(updatedProduct);
         } catch (error) {
             res.status(400).json({ error: error.message });
