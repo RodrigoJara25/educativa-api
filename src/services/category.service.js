@@ -73,6 +73,9 @@ export default class CategoryService {
             if (data.foto && existingCategory.foto && data.foto !== existingCategory.foto) {
                 await deleteImageFromCloudinary(existingCategory.foto);
             }
+            if (data.fotoPortada && existingCategory.fotoPortada && data.fotoPortada !== existingCategory.fotoPortada) {
+                await deleteImageFromCloudinary(existingCategory.fotoPortada);
+            }
 
             // Validar tipo si se está actualizando
             if (data.tipo && !['LIBRO', 'LAMINA'].includes(data.tipo)) {
@@ -105,6 +108,9 @@ export default class CategoryService {
             // Eliminar la imagen asociada en Cloudinary si existe
             if (existingCategory.foto) {
                 await deleteImageFromCloudinary(existingCategory.foto);
+            }
+            if (existingCategory.fotoPortada) {
+                await deleteImageFromCloudinary(existingCategory.fotoPortada);
             }
 
             return deletedCategory;

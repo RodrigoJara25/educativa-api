@@ -13,8 +13,8 @@ const controller = new CategoryController();
 
 router.get('/', controller.getCategories);
 router.get('/:id', controller.getCategoryById);
-router.post('/', uploader.single('image'), controller.createCategory);
-router.put('/:id', uploader.single('image'), controller.updateCategory);
+router.post('/', uploader.fields([{ name: 'image', maxCount: 1 }, { name: 'fotoPortada', maxCount: 1 }]), controller.createCategory);
+router.put('/:id', uploader.fields([{ name: 'image', maxCount: 1 }, { name: 'fotoPortada', maxCount: 1 }]), controller.updateCategory);
 router.delete('/:id', controller.deleteCategory);
 
 export default router;

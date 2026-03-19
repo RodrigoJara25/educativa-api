@@ -29,9 +29,14 @@ export default class CategoryController {
         try {
             const categoryData = req.body;
 
-            // Si viene un archivo subido, asignarlo al campo foto
-            if (req.file) {
-                categoryData.foto = req.file.path;
+            // Si vienen archivos subidos, asignarlos a los campos correspondientes
+            if (req.files) {
+                if (req.files['image']) {
+                    categoryData.foto = req.files['image'][0].path;
+                }
+                if (req.files['fotoPortada']) {
+                    categoryData.fotoPortada = req.files['fotoPortada'][0].path;
+                }
             }
 
             const newCategory = await this.service.createCategory(categoryData);
@@ -46,9 +51,14 @@ export default class CategoryController {
             const { id } = req.params;
             const categoryData = req.body;
 
-            // Si viene un archivo subido, actualizar el campo foto
-            if (req.file) {
-                categoryData.foto = req.file.path;
+            // Si vienen archivos subidos, actualizar los campos correspondientes
+            if (req.files) {
+                if (req.files['image']) {
+                    categoryData.foto = req.files['image'][0].path;
+                }
+                if (req.files['fotoPortada']) {
+                    categoryData.fotoPortada = req.files['fotoPortada'][0].path;
+                }
             }
 
             const updatedCategory = await this.service.updateCategory(id, categoryData);

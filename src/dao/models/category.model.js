@@ -23,6 +23,10 @@ const categorySchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    fotoPortada: {
+        type: String,
+        default: null
+    },
     caracteristicas: {
         type: [String],
         default: []
