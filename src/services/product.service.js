@@ -1,6 +1,7 @@
 import ProductRepository from '../repositories/product.repository.js';
 import CategoryRepository from '../repositories/category.repository.js';
 import SubcategoryRepository from '../repositories/subcategory.repository.js';
+import { deleteImageFromCloudinary } from '../utils/uploader.js';
 
 export default class ProductService {
     constructor() {
@@ -102,6 +103,14 @@ export default class ProductService {
                 delete data.fotoLamina;
             }
 
+            // Eliminar de Cloudinary si subimos una foto nueva en su campo correspondiente
+            if (data.fotoLamina && existingProduct.fotoLamina && data.fotoLamina !== existingProduct.fotoLamina) {
+                await deleteImageFromCloudinary(existingProduct.fotoLamina);
+            }
+            if (data.fotoPortada && existingProduct.fotoPortada && data.fotoPortada !== existingProduct.fotoPortada) {
+                await deleteImageFromCloudinary(existingProduct.fotoPortada);
+            }
+
             const updatedProduct = await this.repository.updateProduct(id, data);
             if (!updatedProduct) throw new Error('No se pudo actualizar el producto');
             return updatedProduct;
@@ -112,9 +121,19 @@ export default class ProductService {
 
     deleteProduct = async (id) => {
         try {
-            await this.getProductById(id);
+            const existingProduct = await this.getProductById(id);
             const deletedProduct = await this.repository.deleteProduct(id);
             if (!deletedProduct) throw new Error('No se pudo eliminar el producto');
+
+            // Eliminar de Cloudinary las fotos del producto eliminado
+            if (existingProduct.fotoLamina) await deleteImageFromCloudinary(existingProduct.fotoLamina);
+            if (existingProduct.fotoPortada) await deleteImageFromCloudinary(existingProduct.fotoPortada);
+            if (existingProduct.fotosInterior && existingProduct.fotosInterior.length > 0) {
+                for (const foto of existingProduct.fotosInterior) {
+                    await deleteImageFromCloudinary(foto);
+                }
+            }
+
             return deletedProduct;
         } catch (error) {
             throw new Error(`Error al eliminar el producto: ${error.message}`);

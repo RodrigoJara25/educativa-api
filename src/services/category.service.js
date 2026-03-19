@@ -1,4 +1,5 @@
 import CategoryRepository from '../repositories/category.repository.js';
+import { deleteImageFromCloudinary } from '../utils/uploader.js';
 
 export default class CategoryService {
     constructor() {
@@ -66,7 +67,12 @@ export default class CategoryService {
     updateCategory = async (id, data) => {
         try {
             // Verificar que la categoría existe
-            await this.getCategoryById(id);
+            const existingCategory = await this.getCategoryById(id);
+
+            // Si se está subiendo una foto nueva, eliminamos la anterior de Cloudinary
+            if (data.foto && existingCategory.foto && data.foto !== existingCategory.foto) {
+                await deleteImageFromCloudinary(existingCategory.foto);
+            }
 
             // Validar tipo si se está actualizando
             if (data.tipo && !['LIBRO', 'LAMINA'].includes(data.tipo)) {
@@ -88,12 +94,17 @@ export default class CategoryService {
     deleteCategory = async (id) => {
         try {
             // Verificar que la categoría existe
-            await this.getCategoryById(id);
+            const existingCategory = await this.getCategoryById(id);
 
             const deletedCategory = await this.repository.deleteCategory(id);
 
             if (!deletedCategory) {
                 throw new Error('No se pudo eliminar la categoría');
+            }
+
+            // Eliminar la imagen asociada en Cloudinary si existe
+            if (existingCategory.foto) {
+                await deleteImageFromCloudinary(existingCategory.foto);
             }
 
             return deletedCategory;

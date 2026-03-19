@@ -1,5 +1,6 @@
 import SubcategoryRepository from '../repositories/subcategory.repository.js';
 import CategoryRepository from '../repositories/category.repository.js';
+import { deleteImageFromCloudinary } from '../utils/uploader.js';
 
 export default class SubcategoryService {
     constructor() {
@@ -75,7 +76,12 @@ export default class SubcategoryService {
     updateSubcategory = async (id, data) => {
         try {
             // Verificar que la subcategoría existe
-            await this.getSubcategoryById(id);
+            const existingSubcategory = await this.getSubcategoryById(id);
+
+            // Eliminar imagen anterior de Cloudinary si estamos subiendo una nueva
+            if (data.foto && existingSubcategory.foto && data.foto !== existingSubcategory.foto) {
+                await deleteImageFromCloudinary(existingSubcategory.foto);
+            }
 
             // Si se está cambiando la categoría, verificar que sea de tipo LAMINA
             if (data.categoria) {
@@ -105,12 +111,17 @@ export default class SubcategoryService {
     deleteSubcategory = async (id) => {
         try {
             // Verificar que la subcategoría existe
-            await this.getSubcategoryById(id);
+            const existingSubcategory = await this.getSubcategoryById(id);
 
             const deletedSubcategory = await this.repository.deleteSubcategory(id);
 
             if (!deletedSubcategory) {
                 throw new Error('No se pudo eliminar la subcategoría');
+            }
+
+            // Eliminar su imagen de Cloudinary asociada
+            if (existingSubcategory.foto) {
+                await deleteImageFromCloudinary(existingSubcategory.foto);
             }
 
             return deletedSubcategory;

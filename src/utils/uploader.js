@@ -20,3 +20,20 @@ const storage = new CloudinaryStorage({
 })
 
 export const uploader = multer({ storage });
+
+export const deleteImageFromCloudinary = async (imageUrl) => {
+    if (!imageUrl) return;
+    try {
+        const urlArray = imageUrl.split('/');
+        const folderName = 'productos_educativa';
+        const folderIndex = urlArray.findIndex(path => path === folderName);
+        if (folderIndex !== -1) {
+            const publicIdWithExtension = urlArray.slice(folderIndex).join('/');
+            const publicId = publicIdWithExtension.split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
+            console.log(`Imagen eliminada de Cloudinary: ${publicId}`);
+        }
+    } catch (error) {
+        console.error('Error al eliminar imagen de Cloudinary:', error);
+    }
+};
