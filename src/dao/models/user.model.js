@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { createHash } from "../../utils/password.js";
 
 const userCollection = 'users';
 
