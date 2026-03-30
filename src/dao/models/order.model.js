@@ -1,22 +1,20 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const orderCollection = 'orders'
+const orderCollection = 'orders';
 
 const orderSchema = new mongoose.Schema({
-    // 1. ¿QUIÉN HIZO EL PEDIDO Y CÓMO?
+    // 1 - ORIGEN DEL PEDIDO
     tipo_pedido: {
         type: String,
-        enum: ['USER', 'DISTRIBUIDOR', 'VENDEDOR'],
+        enum: ['DISTRIBUIDOR', 'CLIENTE_FINAL', 'VENDEDOR'],
         required: true
     },
 
-    // Si fue de un cliente normal o vendedor, es de la coleccion 'users'
-    // Si fue de un distribuidor, es de la coleccion 'distribuidores'
-    // Mongoose permite tener "refPaths" dinámicos, o puedes guardar simplemente el ID y tú sabes de dónde viene por el 'tipo_pedido'.
+    // Quién compra (dinámico: busca en 'users' o en 'distribuidores')
     comprador_id: {
         type: mongoose.Schema.Types.ObjectId,
-        refPath: 'onModel',
-        required: true
+        required: true,
+        refPath: 'onModel'
     },
     onModel: {
         type: String,
@@ -24,36 +22,41 @@ const orderSchema = new mongoose.Schema({
         enum: ['users', 'distribuidores']
     },
 
-    // Opcional: Solo si el pedido fue creado por un Vendedor para su cliente externo
-    vendedor_id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-
-    // 2. EL CARRITO 
+    // 2 - PRODUCTOS COMPRADOS
     productos: [{
         producto_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'products'
+            ref: 'products',
+            required: true
         },
         cantidad: {
             type: Number,
-            required: true
+            required: true,
+            min: [1, 'La cantidad mínima es 1']
         },
-        precio_unitario: {  // Para DISTRIBUIDORES se llena despues
+        // El precio unitario puede ser 0 al inicio para el MAYORISTA
+        precio_unitario: {
             type: Number,
             default: 0
         }
     }],
 
-    total_pedido: { type: Number, default: 0 },
+    // 3 - DATOS DE PAGO Y SUMAS
+    monto_total: {
+        type: Number,
+        default: 0
+    },
 
-    // 3. EL ESTADO DEL PEDIDO (La clave de tu lógica)
+    // 4 - EL ESTADO DEL PEDIDO
     estado: {
         type: String,
         enum: [
-            'CANCELADO',
-            'EN PROCESO',
-            'EXITOSO'
+            'PENDIENTE_PRECIO', // Para cuando el Mayorista hace el pedido sin precios
+            'COTIZADO',         // Admin ya le puso precios, espera confirmación
+            'PAGADO',           // Pedido confirmado y pagado
+            'ENTREGADO'        // Cliente ya lo tiene
         ],
-        default: 'EN PROCESO'
+        default: 'PENDIENTE_PRECIO'
     }
 }, { timestamps: true });
 
