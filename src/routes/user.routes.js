@@ -5,6 +5,7 @@ import {
     getUser,
     updateUser,
     deleteUser,
+    createUser
 } from "../controllers/user.controller.js";
 import { protect, authorize } from "../middlewares/auth.middleware.js";
 
@@ -13,6 +14,7 @@ const router = Router();
 router.use(protect);
 router.use(authorize("ADMIN"));
 
+router.post("/", createUser);       // POST /api/users
 router.get("/", listUsers);          // GET  /api/users
 router.get("/:id", getUser);        // GET  /api/users/:id
 router.put("/:id", updateUser);     // PUT  /api/users/:id

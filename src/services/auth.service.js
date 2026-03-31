@@ -7,17 +7,10 @@ import UserDTO from "../dao/dto/user.dto.js";
 class AuthService {
     /** Registro de usuario */
     async register(data) {
-        // 1️⃣ Verificar que el email no exista
-        const exists = await userRepository.findByEmail(data.email);
-        if (exists) throw new Error("El email ya está registrado");
-
-        // 2️⃣ Hashear password
-        const hashed = createHash(data.password);
-
-        // 3️⃣ Crear usuario vía userService
-        const user = await userService.crearUsuario({ ...data, password: hashed });
-
-        return user; // ya es un UserDTO (sin password)
+        // La validación y el hash ahora están delegados al UserService
+        // para mantener una arquitectura de capas limpia.
+        const user = await userService.crearUsuario(data);
+        return user;
     }
 
     /** Login de usuario */

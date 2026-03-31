@@ -2,6 +2,19 @@
 import userService from "../services/user.service.js";
 
 /**
+ * POST /api/users
+ * Crea un usuario nuevo (Admin puede asignarle rol de Vendedor directamente)
+ */
+export const createUser = async (req, res) => {
+    try {
+        const user = await userService.crearUsuario(req.body);
+        res.status(201).json(user);
+    } catch (err) {
+        res.status(400).json({ msg: err.message });
+    }
+};
+
+/**
  * GET /api/users
  * Lista todos los usuarios (solo para admin)
  */
@@ -33,7 +46,7 @@ export const getUser = async (req, res) => {
  */
 export const updateUser = async (req, res) => {
     try {
-        const updated = await userService.update(req.params.id, req.body);
+        const updated = await userService.updateUser(req.params.id, req.body);
         res.json(updated);
     } catch (err) {
         res.status(400).json({ msg: err.message });

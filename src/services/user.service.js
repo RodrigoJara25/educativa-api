@@ -1,6 +1,7 @@
 // src/services/user.service.js
 import userRepository from "../repositories/user.repository.js";
 import UserDTO from "../dao/dto/user.dto.js";
+import { createHash } from "../utils/password.js";
 
 class UserService {
     /** Lista usuarios (opcional filtro) */
@@ -9,8 +10,17 @@ class UserService {
         return users.map(u => new UserDTO(u));
     }
 
-    /** Crea un nuevo usuario (sin hash, sin lógica de negocio) */
+    /** Crea un nuevo usuario y hashea su contraseña */
     async crearUsuario(data) {
+        // 1. Verificar si el email existe
+        const exists = await userRepository.findByEmail(data.email);
+        if (exists) throw new Error("El email ya está registrado");
+
+        // 2. Hashear password
+        if (data.password) {
+            data.password = createHash(data.password);
+        }
+
         const user = await userRepository.create(data);
         return new UserDTO(user);
     }
@@ -30,7 +40,11 @@ class UserService {
     }
 
     /** Actualiza datos (hash de password lo hace AuthService) */
-    async update(id, data) {
+    async updateUser(id, data) {
+        // Si el Admin envía una nueva contraseña, la hasheamos
+        if (data.password) {
+            data.password = createHash(data.password);
+        }
         const updated = await userRepository.update(id, data);
         if (!updated) throw new Error("No se pudo actualizar");
         return new UserDTO(updated);

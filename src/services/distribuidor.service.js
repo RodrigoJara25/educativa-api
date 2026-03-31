@@ -1,5 +1,6 @@
 import distribuidorRepository from "../repositories/distribuidor.repository.js";
 import DistribuidorDTO from "../dao/dto/distribuidor.dto.js";
+import { createHash } from "../utils/password.js";
 
 class DistribuidorService {
     async listarDistribuidores(filter = {}) {
@@ -8,6 +9,9 @@ class DistribuidorService {
     }
 
     async crearDistribuidor(data) {
+        if (data.password) {
+            data.password = createHash(data.password);
+        }
         const distribuidor = await distribuidorRepository.create(data);
         return new DistribuidorDTO(distribuidor);
     }
@@ -25,6 +29,9 @@ class DistribuidorService {
     }
 
     async update(id, data) {
+        if (data.password) {
+            data.password = createHash(data.password);
+        }
         const updated = await distribuidorRepository.update(id, data);
         if (!updated) throw new Error("No se pudo actualizar");
         return new DistribuidorDTO(updated);
