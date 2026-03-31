@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import SubcategoryController from '../controllers/subcategory.controller.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
 import { uploader } from '../utils/uploader.js';
 
 const router = Router();
@@ -13,6 +14,11 @@ const controller = new SubcategoryController();
 
 router.get('/', controller.getSubcategories);
 router.get('/:id', controller.getSubcategoryById);
+
+// Rutas protegidas (Solo Admin)
+router.use(protect);
+router.use(authorize('ADMIN'));
+
 router.post('/', uploader.single('image'), controller.createSubcategory);
 router.put('/:id', uploader.single('image'), controller.updateSubcategory);
 router.delete('/:id', controller.deleteSubcategory);

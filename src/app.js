@@ -10,6 +10,7 @@ import subcategoryRouter from './routes/subcategory.routes.js';
 import userRouter from './routes/user.routes.js';
 import distribuidorRouter from './routes/distribuidor.routes.js';
 import authRouter from './routes/auth.routes.js';
+import orderRouter from './routes/order.routes.js';
 
 // dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/api/subcategories', subcategoryRouter);
 app.use('/api/users', userRouter);
 app.use('/api/distribuidores', distribuidorRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/orders', orderRouter);
 // Manejar ruta no encontrada
 app.use((req, res, next) => {
     res.status(404).json({ status: 'error', message: 'Ruta no encontrada' });

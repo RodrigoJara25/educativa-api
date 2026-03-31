@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import CategoryController from '../controllers/category.controller.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
 import { uploader } from '../utils/uploader.js';
 
 const router = Router();
@@ -13,6 +14,11 @@ const controller = new CategoryController();
 
 router.get('/', controller.getCategories);
 router.get('/:id', controller.getCategoryById);
+
+// Rutas protegidas (Solo Admin)
+router.use(protect);
+router.use(authorize('ADMIN'));
+
 router.post('/', uploader.fields([{ name: 'image', maxCount: 1 }, { name: 'fotoPortada', maxCount: 1 }]), controller.createCategory);
 router.put('/:id', uploader.fields([{ name: 'image', maxCount: 1 }, { name: 'fotoPortada', maxCount: 1 }]), controller.updateCategory);
 router.delete('/:id', controller.deleteCategory);
