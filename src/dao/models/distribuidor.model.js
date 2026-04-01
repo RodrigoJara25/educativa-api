@@ -22,6 +22,32 @@ const distribuidorSchema = new mongoose.Schema({
         trim: true
     },
 
+    // Datos de Ubicación y Envío (Opcionales)
+    departamento: {
+        type: String,
+        trim: true
+    },
+    provincia: {
+        type: String,
+        trim: true
+    },
+    distrito: {
+        type: String,
+        trim: true
+    },
+    direccion: {
+        type: String,
+        trim: true
+    },
+    agencia: {
+        type: String,
+        trim: true
+    },
+    referencia: {
+        type: String,
+        trim: true
+    },
+
     // Datos de Acceso y Seguridad
     activo: {
         type: Boolean,
