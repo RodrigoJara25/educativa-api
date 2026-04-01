@@ -5,6 +5,10 @@ class DistribuidorRepository {
         return await DistribuidorModel.findOne({ email });
     }
 
+    async findByUsername(username) {
+        return await DistribuidorModel.findOne({ username });
+    }
+
     async findById(id) {
         return await DistribuidorModel.findById(id);
     }

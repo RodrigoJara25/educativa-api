@@ -1,8 +1,10 @@
 import userService from "./user.service.js";
 import userRepository from "../repositories/user.repository.js";
+import distribuidorRepository from "../repositories/distribuidor.repository.js";
 import { createHash, isValidPassword } from "../utils/password.js";
 import { generateToken } from "../utils/token.js";
 import UserDTO from "../dao/dto/user.dto.js";
+import DistribuidorDTO from "../dao/dto/distribuidor.dto.js";
 
 class AuthService {
     /** Registro de usuario */
@@ -28,6 +30,23 @@ class AuthService {
 
         // 4️⃣ Devolver token + DTO (sin password)
         return { token, user: new UserDTO(user) };
+    }
+
+    /** Login de Distribuidor */
+    async loginDistribuidor(username, password) {
+        // 1️⃣ Buscar en distribuidores por username
+        const distribuidor = await distribuidorRepository.findByUsername(username);
+        if (!distribuidor) throw new Error("Credenciales inválidas");
+
+        // 2️⃣ Comparar password
+        const valid = isValidPassword(password, distribuidor.password);
+        if (!valid) throw new Error("Credenciales inválidas");
+
+        // 3️⃣ Generar JWT
+        const token = generateToken({ id: distribuidor._id, role: distribuidor.role });
+
+        // 4️⃣ Devolver token + DTO
+        return { token, user: new DistribuidorDTO(distribuidor) };
     }
 }
 

@@ -3,6 +3,7 @@ export default class DistribuidorDTO {
         this.id = doc._id;
         this.nombre = doc.nombre;
         this.ruc_dni = doc.ruc_dni;
+        this.username = doc.username;
         this.celular = doc.celular;
         this.email = doc.email;
         this.role = doc.role;

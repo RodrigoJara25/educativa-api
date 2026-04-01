@@ -18,3 +18,13 @@ export const login = async (req, res) => {
         res.status(401).json({ msg: err.message });
     }
 };
+
+export const loginDistribuidor = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const result = await authService.loginDistribuidor(username, password);
+        res.json(result);
+    } catch (err) {
+        res.status(401).json({ msg: err.message });
+    }
+};

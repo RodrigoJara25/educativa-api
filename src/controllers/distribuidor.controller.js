@@ -10,6 +10,15 @@ export const listDistribuidores = async (req, res) => {
     }
 };
 
+export const createDistribuidor = async (req, res) => {
+    try {
+        const distribuidor = await distribuidorService.crearDistribuidor(req.body);
+        res.status(201).json(distribuidor);
+    } catch (err) {
+        res.status(400).json({ msg: err.message });
+    }
+};
+
 export const getDistribuidor = async (req, res) => {
     try {
         const distribuidor = await distribuidorService.getById(req.params.id);
