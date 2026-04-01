@@ -8,8 +8,19 @@ export default class OrderDTO {
             id: doc.comprador_id?._id || doc.comprador_id,
             nombre: doc.comprador_id?.nombre || "N/A",
             email: doc.comprador_id?.email || "N/A",
-            tipo: doc.onModel // 'users' o 'distribuidores'
+            tipo: doc.onModel
         };
+
+        // Identificamos quién es el vendedor asignado
+        if (doc.vendedor_id) {
+            this.vendedor = {
+                id: doc.vendedor_id._id || doc.vendedor_id,
+                nombre: doc.vendedor_id.nombre || "N/A",
+                email: doc.vendedor_id.email || "N/A"
+            };
+        } else {
+            this.vendedor = null;
+        }
 
         // Formateamos los productos
         this.productos = doc.productos.map(p => ({

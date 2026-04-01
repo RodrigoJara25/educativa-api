@@ -81,7 +81,14 @@ const distribuidorSchema = new mongoose.Schema({
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'orders'
-    }]
+    }],
+
+    // Relación de Cartera (A qué Vendedor le pertenece)
+    vendedor_asignado: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: false // Opcional por si el admin los crea primero y luego los asigna
+    }
 
 }, { timestamps: true })
 

@@ -22,6 +22,13 @@ const orderSchema = new mongoose.Schema({
         enum: ['users', 'distribuidores']
     },
 
+    // Vendedor a cargo (Obligatorio para Distribuidores, Null para Cliente Final)
+    vendedor_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: false // Como los Clientes Finales no tienen vendedor, lo dejamos false a nivel BD y lo forzamos en la lógica de negocio
+    },
+
     // 2 - PRODUCTOS COMPRADOS
     productos: [{
         producto_id: {

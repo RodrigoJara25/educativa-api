@@ -17,6 +17,10 @@ export default class DistribuidorDTO {
         this.email = doc.email;
         this.role = doc.role;
         this.activo = doc.activo;
+
+        // Vendedor que lo administra
+        this.vendedorAsignado = doc.vendedor_asignado || null;
+
         this.orders = doc.orders;
         this.createdAt = doc.createdAt;
         this.updatedAt = doc.updatedAt;

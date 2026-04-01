@@ -13,8 +13,9 @@ class OrderRepository {
      */
     async getOrders(filter = {}) {
         return await orderModel.find(filter)
-            .populate('comprador_id') // Obtiene nombre/email del comprador
-            .populate('productos.producto_id'); // Obtiene nombre/foto del producto
+            .populate('comprador_id')
+            .populate('productos.producto_id')
+            .populate('vendedor_id'); // Obtiene nombre/email del vendedor
     }
 
     /** 
@@ -23,7 +24,8 @@ class OrderRepository {
     async getOrderById(id) {
         return await orderModel.findById(id)
             .populate('comprador_id')
-            .populate('productos.producto_id');
+            .populate('productos.producto_id')
+            .populate('vendedor_id');
     }
 
     /** 
@@ -32,7 +34,8 @@ class OrderRepository {
     async updateOrder(id, data) {
         return await orderModel.findByIdAndUpdate(id, data, { new: true })
             .populate('comprador_id')
-            .populate('productos.producto_id');
+            .populate('productos.producto_id')
+            .populate('vendedor_id');
     }
 
     /** 
