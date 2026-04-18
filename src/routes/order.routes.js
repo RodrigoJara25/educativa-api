@@ -17,11 +17,11 @@ router.use(protect);
 // 1. Quien sea puede crear un pedido (Usuario o Distribuidor)
 router.post("/", createOrder);
 
-// 2. Solo Admin o Vendedor deberían poder ver TODOS los pedidos
-router.get("/", authorize("ADMIN", "VENDEDOR"), listOrders);
+// 2. Todos pueden ver lista de pedidos (Filtrado inteligentemente por rol en el controlador)
+router.get("/", authorize("ADMIN", "VENDEDOR", "DISTRIBUIDOR"), listOrders);
 
-// 3. Ver, actualizar o borrar un pedido específico (Solo para Admin por ahora)
-router.get("/:id", authorize("ADMIN", "VENDEDOR"), getOrder);
+// 3. Ver, actualizar o borrar un pedido específico
+router.get("/:id", authorize("ADMIN", "VENDEDOR", "DISTRIBUIDOR"), getOrder);
 router.put("/:id", authorize("ADMIN", "VENDEDOR"), updateOrder);
 router.delete("/:id", authorize("ADMIN"), deleteOrder);
 

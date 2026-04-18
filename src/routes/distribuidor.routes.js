@@ -11,11 +11,11 @@ import { protect, authorize } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.use(protect);
-router.use(authorize("ADMIN"));
-router.post("/", createDistribuidor);
-router.get("/", listDistribuidores);
-router.get("/:id", getDistribuidor);
-router.put("/:id", updateDistribuidor);
-router.delete("/:id", deleteDistribuidor);
+// Solo Admin o Vendedor pueden gestionar lista de distribuidores
+router.get("/", authorize("ADMIN", "VENDEDOR"), listDistribuidores);
+router.post("/", authorize("ADMIN", "VENDEDOR"), createDistribuidor);
+router.get("/:id", authorize("ADMIN", "VENDEDOR"), getDistribuidor);
+router.put("/:id", authorize("ADMIN", "VENDEDOR"), updateDistribuidor);
+router.delete("/:id", authorize("ADMIN"), deleteDistribuidor);
 
 export default router;

@@ -3,7 +3,14 @@ import distribuidorService from "../services/distribuidor.service.js";
 
 export const listDistribuidores = async (req, res) => {
     try {
-        const distribuidores = await distribuidorService.listarDistribuidores();
+        let filter = {};
+
+        // Si es Vendedor, solo ve sus clientes asignados
+        if (req.user && req.user.role === 'VENDEDOR') {
+            filter = { vendedor_asignado: req.user.id };
+        }
+
+        const distribuidores = await distribuidorService.listarDistribuidores(filter);
         res.json(distribuidores);
     } catch (err) {
         res.status(500).json({ msg: err.message });

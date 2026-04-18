@@ -10,7 +10,7 @@ class DistribuidorRepository {
     }
 
     async findById(id) {
-        return await DistribuidorModel.findById(id);
+        return await DistribuidorModel.findById(id).populate('vendedor_asignado');
     }
 
     async create(data) {
@@ -27,7 +27,7 @@ class DistribuidorRepository {
     }
 
     async listarDistribuidores(filter = {}) {
-        return await DistribuidorModel.find(filter);
+        return await DistribuidorModel.find(filter).populate('vendedor_asignado');
     }
 }
 

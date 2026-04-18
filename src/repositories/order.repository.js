@@ -5,7 +5,18 @@ class OrderRepository {
      * Crea un pedido 
      */
     async createOrder(data) {
-        return await orderModel.create(data);
+        const order = await orderModel.create(data);
+        return await order.populate([
+            'comprador_id',
+            'vendedor_id',
+            {
+                path: 'productos.producto_id',
+                populate: [
+                    { path: 'categoria' },
+                    { path: 'subcategoria' }
+                ]
+            }
+        ]);
     }
 
     /** 
@@ -13,9 +24,17 @@ class OrderRepository {
      */
     async getOrders(filter = {}) {
         return await orderModel.find(filter)
-            .populate('comprador_id')
-            .populate('productos.producto_id')
-            .populate('vendedor_id'); // Obtiene nombre/email del vendedor
+            .populate([
+                'comprador_id',
+                'vendedor_id',
+                {
+                    path: 'productos.producto_id',
+                    populate: [
+                        { path: 'categoria' },
+                        { path: 'subcategoria' }
+                    ]
+                }
+            ]);
     }
 
     /** 
@@ -23,9 +42,17 @@ class OrderRepository {
      */
     async getOrderById(id) {
         return await orderModel.findById(id)
-            .populate('comprador_id')
-            .populate('productos.producto_id')
-            .populate('vendedor_id');
+            .populate([
+                'comprador_id',
+                'vendedor_id',
+                {
+                    path: 'productos.producto_id',
+                    populate: [
+                        { path: 'categoria' },
+                        { path: 'subcategoria' }
+                    ]
+                }
+            ]);
     }
 
     /** 
@@ -33,9 +60,17 @@ class OrderRepository {
      */
     async updateOrder(id, data) {
         return await orderModel.findByIdAndUpdate(id, data, { new: true })
-            .populate('comprador_id')
-            .populate('productos.producto_id')
-            .populate('vendedor_id');
+            .populate([
+                'comprador_id',
+                'vendedor_id',
+                {
+                    path: 'productos.producto_id',
+                    populate: [
+                        { path: 'categoria' },
+                        { path: 'subcategoria' }
+                    ]
+                }
+            ]);
     }
 
     /** 

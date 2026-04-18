@@ -12,7 +12,19 @@ export const createOrder = async (req, res) => {
 
 export const listOrders = async (req, res) => {
     try {
-        const orders = await orderService.listOrders();
+        let filter = {};
+
+        // Si es Vendedor, ve solo sus pedidos asignados
+        if (req.user && req.user.role === 'VENDEDOR') {
+            filter = { vendedor_id: req.user.id };
+        }
+
+        // Si es Distribuidor, ve solo sus propios pedidos
+        if (req.user && req.user.role === 'DISTRIBUIDOR') {
+            filter = { comprador_id: req.user.id };
+        }
+
+        const orders = await orderService.listOrders(filter);
         res.json(orders);
     } catch (err) {
         res.status(500).json({ msg: err.message });

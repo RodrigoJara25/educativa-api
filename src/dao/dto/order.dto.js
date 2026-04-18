@@ -3,33 +3,43 @@ export default class OrderDTO {
         this.id = doc._id;
         this.tipoPedido = doc.tipo_pedido;
 
-        // Identificamos quién es el comprador (soporta populate)
-        this.comprador = {
-            id: doc.comprador_id?._id || doc.comprador_id,
-            nombre: doc.comprador_id?.nombre || "N/A",
-            email: doc.comprador_id?.email || "N/A",
-            tipo: doc.onModel
-        };
-
-        // Identificamos quién es el vendedor asignado
-        if (doc.vendedor_id) {
-            this.vendedor = {
-                id: doc.vendedor_id._id || doc.vendedor_id,
-                nombre: doc.vendedor_id.nombre || "N/A",
-                email: doc.vendedor_id.email || "N/A"
+        // Identificamos quién es el comprador (Full Data)
+        if (doc.comprador_id && typeof doc.comprador_id === 'object') {
+            const { password, ...buyerData } = doc.comprador_id._doc || doc.comprador_id;
+            this.comprador = {
+                id: doc.comprador_id._id,
+                tipo: doc.onModel,
+                ...buyerData
             };
         } else {
-            this.vendedor = null;
+            this.comprador = { id: doc.comprador_id, tipo: doc.onModel, nombre: "N/A" };
         }
 
-        // Formateamos los productos
-        this.productos = doc.productos.map(p => ({
-            id: p.producto_id?._id || p.producto_id,
-            nombre: p.producto_id?.nombre || "Producto desconocido",
-            cantidad: p.cantidad,
-            precioUnitario: p.precio_unitario,
-            subtotal: p.cantidad * p.precio_unitario
-        }));
+        // Identificamos quién es el vendedor asignado (Full Data)
+        if (doc.vendedor_id && typeof doc.vendedor_id === 'object') {
+            const { password, ...sellerData } = doc.vendedor_id._doc || doc.vendedor_id;
+            this.vendedor = {
+                id: doc.vendedor_id._id,
+                ...sellerData
+            };
+        } else {
+            this.vendedor = doc.vendedor_id ? { id: doc.vendedor_id } : null;
+        }
+
+        // Formateamos los productos (Aplanado para fácil acceso en Frontend)
+        this.productos = doc.productos.map(p => {
+            const productInfo = (p.producto_id && typeof p.producto_id === 'object')
+                ? (p.producto_id._doc || p.producto_id)
+                : {};
+
+            return {
+                id: p.producto_id?._id || p.producto_id,
+                ...productInfo, // Trae item, titulo, fotoLamina, categoria, subcategoria, etc.
+                cantidad: p.cantidad,
+                precioUnitario: p.precio_unitario,
+                subtotal: p.cantidad * p.precio_unitario
+            };
+        });
 
         this.montoTotal = doc.monto_total;
         this.estado = doc.estado;

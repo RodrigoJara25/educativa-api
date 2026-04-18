@@ -18,8 +18,16 @@ export default class DistribuidorDTO {
         this.role = doc.role;
         this.activo = doc.activo;
 
-        // Vendedor que lo administra
-        this.vendedorAsignado = doc.vendedor_asignado || null;
+        // Vendedor que lo administra (Populate)
+        if (doc.vendedor_asignado && typeof doc.vendedor_asignado === 'object') {
+            this.vendedorAsignado = {
+                id: doc.vendedor_asignado._id,
+                nombre: doc.vendedor_asignado.nombre,
+                email: doc.vendedor_asignado.email
+            };
+        } else {
+            this.vendedorAsignado = doc.vendedor_asignado || null;
+        }
 
         this.orders = doc.orders;
         this.createdAt = doc.createdAt;
